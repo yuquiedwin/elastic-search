@@ -15,6 +15,8 @@ services:
       memlock:
         soft: -1
         hard: -1
+    networks:
+      - elastic
   kibana:
     depends_on:
       - elasticsearch
@@ -27,6 +29,25 @@ services:
     restart: always
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - elastic
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
+    container_name: filebeat
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers
+    user: root
+    depends_on:
+      - elasticsearch
+      - kibana
+    command: ["bash", "-c", "chmod go-w /usr/share/filebeat/filebeat.yml && filebeat -e"]
+    restart: always
+    networks:
+      - elastic
+networks:
+  elastic:
+    driver: bridge
 volumes:
   elasticsearch-data:
     driver: local

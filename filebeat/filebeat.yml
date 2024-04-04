@@ -1,0 +1,20 @@
+  output.elasticsearch:
+    hosts: ["http://elasticsearch:9200"]
+    username: "elastic"
+    password: "elastic_password"
+  setup.kibana:
+    host: "http://kibana:5601"
+  filebeat.modules:
+    - module: postgresql
+      enabled: true
+      log:
+        enabled: true
+      var.paths: ["C:/Users/DELL/Documents/Repos/multiple-db/logs/postgresql.log"]
+      var.db.dsn: "postgresql://test_user:test_password@db1:5411/reports"
+    - module: postgresql
+      enabled: true
+      log:
+        enabled: true
+      var.paths: ["C:/Users/DELL/Documents/Repos/multiple-db/logs/postgresql.log"]
+      var.db.dsn: "postgresql://test_user:test_password@db2:5422/liftings_reports"
+      
